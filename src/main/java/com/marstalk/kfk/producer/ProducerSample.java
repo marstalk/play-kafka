@@ -63,7 +63,7 @@ public class ProducerSample {
         Producer<String, String> producer = new KafkaProducer<>(properties);
 
         //消息对象
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             ProducerRecord<String, String> record = new ProducerRecord<>(AdminSample.TOPIC_LJC, "k-" + i,
                     "value-" + i);
             // 发送
@@ -111,7 +111,7 @@ public class ProducerSample {
         Producer<String, String> producer = new KafkaProducer<>(properties);
 
         //消息对象
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             ProducerRecord<String, String> record = new ProducerRecord<>(AdminSample.TOPIC_LJC, "k" + i,
                     "value" + i);
             // 发送
