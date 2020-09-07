@@ -38,15 +38,15 @@ public class AdminSample {
         //System.out.println(adminClient);
 
 
-        //createTopic();
+        createTopic();
 
         //deleteTopic(TOPIC_LJC_TWO);
 
         listAllTopics();
 
-        increPartitions();
+        //increPartitions();
 
-        describeTopics();
+        //describeTopics();
 
         //alterConfig();
 
@@ -224,8 +224,8 @@ public class AdminSample {
     public static void createTopic() {
         AdminClient adminClient = adminClient();
         NewTopic topic = new NewTopic(TOPIC_LJC, 1, new Short("1"));
-        NewTopic topic2 = new NewTopic(TOPIC_LJC_TWO, 1, new Short("1"));
-        CreateTopicsResult createTopicsResult = adminClient.createTopics(Arrays.asList(topic, topic2));
+        //NewTopic topic2 = new NewTopic(TOPIC_LJC_TWO, 1, new Short("1"));
+        CreateTopicsResult createTopicsResult = adminClient.createTopics(Arrays.asList(topic));
         System.out.println(createTopicsResult);
     }
 
