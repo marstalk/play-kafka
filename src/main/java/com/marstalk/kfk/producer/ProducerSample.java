@@ -35,7 +35,43 @@ public class ProducerSample {
 
         //producerSendWithCallback();
 
-        producerSendWithCallbackAndPartitioner();
+        //producerSendWithCallbackAndPartitioner();
+
+        producerSendWithSameKey();
+    }
+
+    /**
+     * producer异步发送演示，
+     * 1）topic有三个partition
+     * 2）所有的消息的key都一致
+     * 3）使用默认的分区器
+     */
+    public static void producerSendWithSameKey(){
+        Properties properties = new Properties();
+        String aliyun_beidou_kafka = System.getProperty("aliyun_beidou_kafka");
+
+        //重要的配置：
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, aliyun_beidou_kafka);
+        properties.put(ProducerConfig.ACKS_CONFIG, "all");
+        properties.put(ProducerConfig.RETRIES_CONFIG, "0");
+        properties.put(ProducerConfig.BATCH_SIZE_CONFIG, "16384");
+        properties.put(ProducerConfig.LINGER_MS_CONFIG, "1");
+        properties.put(ProducerConfig.BUFFER_MEMORY_CONFIG, "33554432");
+        //序列化
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+        //Producer对象
+        Producer<String, String> producer = new KafkaProducer<>(properties);
+
+        //消息对象
+        for (int i = 0; i < 50; i++) {
+            ProducerRecord<String, String> record = new ProducerRecord<>(AdminSample.TOPIC_LJC, "key",
+                    "value" + i);
+            // 发送
+            producer.send(record);
+        }
+        // !!【所有的通道都需要关闭】
+        producer.close();
     }
 
     /**

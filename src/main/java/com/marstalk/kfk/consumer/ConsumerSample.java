@@ -19,13 +19,13 @@ public class ConsumerSample {
     public static void main(String[] args) {
         //helloWorld();
 
-        //committedOffset();
+        committedOffset();
 
         //committedOffsetWithPartition();
 
         //committedOffsetWithSubscribeSpecificPartition();
 
-        controlOffset();
+        //controlOffset();
     }
 
     /**
