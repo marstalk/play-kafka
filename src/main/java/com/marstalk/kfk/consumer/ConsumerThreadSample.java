@@ -19,6 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 每个线程对应一个KafkaConsumer实例，解决线程安全问题。 业务性数据，在失败的时候可以rollback。数据不能丢失，类似TCP 一般来说一个分区对应一个Consumer
+ * 1）这个方式简单，而且容易实现手动commit offset功能，适用于那种需要严格不丢失数据的场景下，类似TCP。
+ * 2）每个线程都占用一个连接。
+ * @author shanzhonglaosou
  */
 public class ConsumerThreadSample {
 
@@ -31,7 +34,7 @@ public class ConsumerThreadSample {
                 TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(10), r -> new Thread(r, "KafkaConsumer" + ai.getAndIncrement()));
         for (int i = 0; i < 3; i++) {
-            executorService.submit(new Worker(AdminSample.TOPIC_LJC, i));
+            executorService.execute(new Worker(AdminSample.TOPIC_LJC, i));
         }
     }
 
@@ -41,7 +44,7 @@ public class ConsumerThreadSample {
         private String workerName;
         private KafkaConsumer<String, String> consumer;
         private TopicPartition topicPartition;
-        //TODO 为什么需要volatile修饰呢？
+        //使用volatile修饰，其他线程对shutdown置为true，之后，需要让worker线程看到。
         private volatile boolean shutdown;
 
         public Worker(String topic, int partitionId) {
