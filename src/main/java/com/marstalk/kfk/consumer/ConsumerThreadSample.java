@@ -31,11 +31,11 @@ public class ConsumerThreadSample {
                 TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(10), r -> new Thread(r, "KafkaConsumer" + ai.getAndIncrement()));
         for (int i = 0; i < 3; i++) {
-            executorService.submit(new Workder(AdminSample.TOPIC_LJC, i));
+            executorService.submit(new Worker(AdminSample.TOPIC_LJC, i));
         }
     }
 
-    static class Workder implements Runnable {
+    static class Worker implements Runnable {
 
         //泛型了消息的key和value。本例子中都是String。
         private String workerName;
@@ -44,7 +44,7 @@ public class ConsumerThreadSample {
         //TODO 为什么需要volatile修饰呢？
         private volatile boolean shutdown;
 
-        public Workder(String topic, int partitionId) {
+        public Worker(String topic, int partitionId) {
             Properties props = new Properties();
             props.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, System.getProperty("aliyun_beidou_kafka"));
             props.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "test");
