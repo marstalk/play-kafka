@@ -4,6 +4,7 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Produced;
@@ -11,6 +12,7 @@ import org.apache.kafka.streams.kstream.Produced;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 
 public class StreamSample {
     private static final String INPUT_TOPIC = "ljc-stream-in";
@@ -32,7 +34,24 @@ public class StreamSample {
         foreachStream(streamBuilder);
         KafkaStreams kafkaStreams = new KafkaStreams(streamBuilder.build(), props);
 
-        kafkaStreams.start();
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        Runtime.getRuntime().addShutdownHook(new Thread("stream-shutdown-thread"){
+            @Override
+            public void run() {
+                kafkaStreams.close();
+                countDownLatch.countDown();
+            }
+        });
+
+        try {
+            kafkaStreams.start();
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            //异常退出
+            System.exit(1);
+        }
+        //正常退出
+        System.exit(0);
     }
 
     /**
