@@ -10,7 +10,7 @@ import java.util.Map;
  * 而开发者可以通过提供自定义的Partitioner来实现自己的逻辑。
  * @author ljc524
  */
-public class SamplePartition implements Partitioner {
+public class SamplePartitioner implements Partitioner {
     @Override
     public int partition(String topic, Object key, byte[] keyBytes, Object value, byte[] valueBytes, Cluster cluster) {
         //这个方法决定了消息进入哪个分区

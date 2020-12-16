@@ -1,7 +1,6 @@
 package com.marstalk.kfk.producer;
 
 import com.marstalk.kfk.admin.AdminSample;
-import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -93,7 +92,7 @@ public class ProducerSample {
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 
         //指定partitioner
-        properties.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, SamplePartition.class.getName());
+        properties.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, SamplePartitioner.class.getName());
 
         //Producer对象
         Producer<String, String> producer = new KafkaProducer<>(properties);
